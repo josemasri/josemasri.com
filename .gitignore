@@ -1,0 +1,5 @@
+# Estado local de oh-my-claudecode (sesiones, checkpoints, memoria del proyecto)
+.omc/
+
+# macOS
+.DS_Store

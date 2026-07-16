@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>José Masri — Full-Stack Software Engineer</title>
+  <meta name="description" content="José Masri, Full-Stack Software Engineer based in Mexico City. 7+ years building backends, APIs and production integrations: Node/TypeScript, Laravel, Java, React. Interactive 3D portfolio." />
+  <meta name="author" content="José Masri" />
+  <meta name="theme-color" content="#16182E" />
+  <link rel="canonical" href="https://josemasri.com/en/" />
+
+  <!-- Languages -->
+  <link rel="alternate" hreflang="es-MX" href="https://josemasri.com/" />
+  <link rel="alternate" hreflang="en" href="https://josemasri.com/en/" />
+  <link rel="alternate" hreflang="x-default" href="https://josemasri.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://josemasri.com/en/" />
+  <meta property="og:title" content="José Masri — Full-Stack Software Engineer" />
+  <meta property="og:description" content="7+ years building backends, APIs and production integrations. Interactive 3D portfolio." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="es_MX" />
+  <meta property="og:image" content="https://josemasri.com/assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="José Masri — Full-Stack Software Engineer" />
+  <meta name="twitter:description" content="7+ years building backends, APIs and production integrations. Interactive 3D portfolio." />
+  <meta name="twitter:image" content="https://josemasri.com/assets/og-image.png" />
+
+  <!-- Fuentes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="../styles/main.css" />
+
+  <!-- Import map para three.js + addons -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/"
+    }
+  }
+  </script>
+
+  <!-- Watchdog (script CLÁSICO, no module): si el módulo ESM o un CDN falla y nunca quita
+       is-loading, igual revelamos el contenido estático tras 6s para no dejar loader infinito. -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      window.__pixelWatchdog = setTimeout(function () {
+        if (document.body.classList.contains('is-loading')) {
+          document.body.classList.remove('is-loading');
+          document.body.classList.add('static-mode');
+          var cards = document.querySelectorAll('.card');
+          for (var i = 0; i < cards.length; i++) cards[i].classList.add('is-in');
+        }
+      }, 6000);
+    });
+  </script>
+</head>
+
+<body class="is-loading">
+  <a class="skip-link" href="#content">Skip to content</a>
+
+  <!-- Lienzo 3D de fondo (decorativo; el contenido real vive en el overlay semántico) -->
+  <canvas id="scene" aria-hidden="true"></canvas>
+
+  <!-- Pantalla de carga -->
+  <div id="loader" class="loader" role="status" aria-live="polite">
+    <div class="loader__bar"><span class="loader__fill"></span></div>
+    <p class="loader__text">Loading<span class="loader__dots">…</span></p>
+  </div>
+
+  <!-- HUD fijo estilo terminal -->
+  <aside class="hud" aria-hidden="true">
+    <div class="hud__row"><span class="hud__num" id="hud-num">00</span><span class="hud__label" id="hud-label">START</span></div>
+    <div class="hud__track"><span class="hud__progress" id="hud-progress"></span></div>
+    <div class="hud__pixel" id="hud-pixel">Full-Stack Software Engineer · Mexico City</div>
+  </aside>
+
+  <!-- Marca / nav mínima -->
+  <header class="brand">
+    <a class="brand__mark" href="#hero">JM</a>
+    <nav class="brand__nav" aria-label="Sections">
+      <a href="#sobre-mi">About</a>
+      <a href="#experiencia">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#proyectos">Projects</a>
+      <a href="#contacto">Contact</a>
+    </nav>
+    <div class="brand__actions">
+      <a class="brand__lang" href="../" hreflang="es-MX" lang="es" title="Leer esta página en español">ES</a>
+      <button class="brand__toggle" id="toggle-motion" type="button" aria-pressed="false" aria-label="Pause or resume the 3D animation" title="Pause or resume the 3D animation">
+        <span class="brand__toggle-dot"></span> 3D
+      </button>
+    </div>
+  </header>
+
+  <!-- ===== CONTENIDO (overlay semántico + fallback accesible) ===== -->
+  <main id="content">
+
+    <section class="panel panel--hero" id="hero" data-station="0">
+      <div class="card card--center">
+        <p class="eyebrow"><span class="eyebrow__dot"></span> Mexico City</p>
+        <h1 class="title">José Masri</h1>
+        <p class="role">Full-Stack Software Engineer</p>
+        <p class="lede"><strong>7+ years</strong> building backends, APIs and production integrations. Currently on <strong>Indeed's JavaScript Ecosystem team</strong>, through AgileEngine.</p>
+        <div class="contact-actions">
+          <a class="btn btn--ghost scroll-cue" href="#sobre-mi">See my work <span class="scroll-cue__arrow">↓</span></a>
+          <a class="btn btn--primary" href="../assets/cv-jose-masri.pdf" download>Download CV</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel panel--left" id="sobre-mi" data-station="1">
+      <div class="card">
+        <p class="kicker">01 · Profile</p>
+        <h2 class="heading">Backend engineer with full-stack reach</h2>
+        <p class="body">I've spent <strong>7+ years</strong> building and running backend services, APIs and integrations in production. I work mostly in <strong>Node.js/TypeScript, PHP/Laravel, Java and Python</strong>, with PostgreSQL, MySQL, MongoDB and Redis, deployed on AWS, GCP and Docker. I've taken projects from requirements and design through launch, refactors and production incidents, and I've led small teams.</p>
+        <ul class="facts">
+          <li><strong>7+</strong> years in production</li>
+          <li><strong>1,700+</strong> verified commits</li>
+          <li><strong>39</strong> projects deployed</li>
+        </ul>
+        <a class="btn btn--ghost" href="#experiencia">See experience</a>
+      </div>
+    </section>
+
+    <section class="panel panel--center" id="experiencia" data-station="2">
+      <div class="card card--wide">
+        <p class="kicker">02 · Track record</p>
+        <h2 class="heading">Experience</h2>
+        <ol class="timeline">
+          <li class="timeline__item">
+            <p class="timeline__period">2022 — Present</p>
+            <h3 class="timeline__role">Senior Backend Engineer <span class="timeline__co">AgileEngine</span></h3>
+            <p class="timeline__note"><strong>Indeed's JavaScript Ecosystem team</strong>: core Node.js libraries, Docker images and templates used by every other internal team. Production Node migrations, CI/CD automation, and Shopify ↔ Shopmonkey integrations for Moran Family of Brands.</p>
+          </li>
+          <li class="timeline__item">
+            <p class="timeline__period">2021 — 2022</p>
+            <h3 class="timeline__role">Full Stack Engineering Manager <span class="timeline__co">Jellyfish</span></h3>
+            <p class="timeline__note">Backend architecture and team leadership across three fintech products: <strong>bank onboarding</strong> (NestJS, MongoDB, Kubernetes), <strong>contactless transactions</strong> and <strong>payment methods</strong>. Also Prosa Analytics: Looker dashboards with row-level filtering by role for one of Mexico's largest payment processors.</p>
+          </li>
+          <li class="timeline__item">
+            <p class="timeline__period">2020 — 2021</p>
+            <h3 class="timeline__role">Backend / Integrations Engineer <span class="timeline__co">Máscara de Látex</span></h3>
+            <p class="timeline__note">Integrations between the storefront and ERP and marketplace systems: <strong>Netsuite, Shopify GraphQL and the Amazon API</strong>. Migrated the service to Docker and improved its stability.</p>
+          </li>
+          <li class="timeline__item">
+            <p class="timeline__period">2018 — 2019</p>
+            <h3 class="timeline__role">Full Stack Engineer <span class="timeline__co">Printogo</span></h3>
+            <p class="timeline__note">Architected an end-to-end printing and delivery platform: real-time API (Socket.io), web and mobile. Deployed on Docker and Kubernetes.</p>
+          </li>
+          <li class="timeline__item">
+            <p class="timeline__period">2016 — 2020</p>
+            <h3 class="timeline__role">Software Engineer <span class="timeline__co">Freelance / Startups</span></h3>
+            <p class="timeline__note">Led development and small teams on <strong>JMatch</strong> (a community dating app) and <strong>Yad LaKala Raffles</strong> (e-commerce with MercadoPago payments).</p>
+          </li>
+        </ol>
+        <a class="btn btn--primary" href="../assets/cv-jose-masri.pdf" download>Download full CV</a>
+      </div>
+    </section>
+
+    <section class="panel panel--right" id="skills" data-station="3">
+      <div class="card">
+        <p class="kicker">03 · Stack</p>
+        <h2 class="heading">Technologies</h2>
+        <div class="chips">
+          <p class="chips__label">Languages</p>
+          <ul class="chips__list" data-chips="lang">
+            <li>TypeScript</li><li>JavaScript</li><li>Node.js</li><li>Python</li><li>PHP</li><li>Java</li><li>Swift</li><li>Dart</li>
+          </ul>
+          <p class="chips__label">Frameworks</p>
+          <ul class="chips__list" data-chips="fw">
+            <li>NestJS</li><li>Express</li><li>Laravel</li><li>Spring</li><li>React</li><li>Next.js</li><li>Vue</li><li>React Native</li>
+          </ul>
+          <p class="chips__label">Data</p>
+          <ul class="chips__list" data-chips="db">
+            <li>PostgreSQL</li><li>MySQL</li><li>MongoDB</li><li>Redis</li><li>MariaDB</li><li>Firebase</li>
+          </ul>
+          <p class="chips__label">Cloud and DevOps</p>
+          <ul class="chips__list" data-chips="cloud">
+            <li>AWS</li><li>GCP</li><li>Docker</li><li>Kubernetes</li><li>GitLab CI</li><li>GitHub Actions</li>
+          </ul>
+        </div>
+        <a class="btn btn--ghost" href="#proyectos">See projects</a>
+      </div>
+    </section>
+
+    <!-- Ancla de proyectos -->
+    <div id="proyectos" class="anchor" aria-hidden="true"></div>
+
+    <section class="panel panel--left project" id="erp-ecommerce" data-station="4" data-hue="#2D4EF5">
+      <div class="card">
+        <p class="kicker">04 · Projects <span class="org">Blazt</span></p>
+        <h2 class="heading">ERP E-commerce <span class="tech">TypeScript · Node</span></h2>
+        <p class="body">An ERP platform for <strong>arbitrage between Amazon US and MercadoLibre MX</strong>: it spots pricing opportunities, syncs catalog and inventory, and publishes to both marketplaces. TypeScript monorepo with an API, a web dashboard and its own storefront on PostgreSQL.</p>
+        <ul class="metrics">
+          <li><strong>432</strong> of my commits</li>
+          <li><strong>36%</strong> of the repo</li>
+        </ul>
+        <a class="btn btn--primary" href="https://ecommerce.blazt.dev" target="_blank" rel="noopener">View live</a>
+      </div>
+    </section>
+
+    <section class="panel panel--right project" id="bebank" data-station="5" data-hue="#E76F00">
+      <div class="card">
+        <p class="kicker">05 · Projects <span class="org">Blazt</span></p>
+        <h2 class="heading">Bebank <span class="tech">Java · Spring · React</span></h2>
+        <p class="body">A <strong>core banking</strong> platform: accounts, transactions, back office and customer onboarding. <strong>Java/Spring</strong> backend with a React/TypeScript frontend. The project where I carry the most weight — nearly 9 out of every 10 commits in the repo are mine.</p>
+        <ul class="metrics">
+          <li><strong>336</strong> of my commits</li>
+          <li><strong>88%</strong> of the repo</li>
+        </ul>
+        <a class="btn btn--primary" href="https://bebank.mx" target="_blank" rel="noopener">bebank.mx</a>
+      </div>
+    </section>
+
+    <section class="panel panel--left project" id="motofinancia" data-station="6" data-hue="#FF2D20">
+      <div class="card">
+        <p class="kicker">06 · Projects <span class="org">Overcloud</span></p>
+        <h2 class="heading">MotoFinancia <span class="tech">Laravel · React</span></h2>
+        <p class="body">A complete <strong>motorcycle financing</strong> system: Laravel API, admin dashboard, dealer portal, public site and documentation. Six repos covering loan origination, collections and the dealer network.</p>
+        <ul class="metrics">
+          <li><strong>233</strong> of my commits</li>
+          <li><strong>6</strong> repos</li>
+        </ul>
+        <a class="btn btn--primary" href="https://motofinancia.devgeai.com" target="_blank" rel="noopener">View live</a>
+      </div>
+    </section>
+
+    <section class="panel panel--right project" id="driveaway" data-station="7" data-hue="#2D4EF5">
+      <div class="card">
+        <p class="kicker">07 · Projects <span class="org">Overcloud</span></p>
+        <h2 class="heading">Drive Away <span class="tech">TypeScript · Node · React</span></h2>
+        <p class="body">A <strong>fleet management and transfers</strong> platform built almost entirely on my own: <strong>99% of the repository is mine</strong>. Node/TypeScript backend, React frontend and Docker Compose deployment.</p>
+        <ul class="metrics">
+          <li><strong>127</strong> of my commits</li>
+          <li><strong>99%</strong> of the repo</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel panel--left project" id="ototo" data-station="8" data-hue="#42d392">
+      <div class="card">
+        <p class="kicker">08 · Projects <span class="org">Overcloud</span></p>
+        <h2 class="heading">Ototo Rifas <span class="tech">Laravel · Vue</span></h2>
+        <p class="body">A <strong>digital raffle</strong> system running in production with real traffic: ticket sales, draws and notifications. Laravel + Vue, with a <strong>WhatsApp bridge</strong> to confirm purchases and notify winners.</p>
+        <ul class="metrics">
+          <li><strong>88</strong> of my commits</li>
+          <li><strong>43%</strong> of the repo</li>
+        </ul>
+        <a class="btn btn--primary" href="https://mrwin.com.mx" target="_blank" rel="noopener">mrwin.com.mx</a>
+      </div>
+    </section>
+
+    <section class="panel panel--right project" id="keishejad" data-station="9" data-hue="#FF2D20">
+      <div class="card">
+        <p class="kicker">09 · Projects <span class="org">Overcloud</span></p>
+        <h2 class="heading">Keish Ejad <span class="tech">PHP · Blade</span></h2>
+        <p class="body">A large-scale community platform: member, content and event management. One of the biggest repos I've worked on, doing PHP backend development within a distributed team.</p>
+        <ul class="metrics">
+          <li><strong>79</strong> of my commits</li>
+          <li><strong>626</strong> total commits</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel panel--left project" id="kosherbot" data-station="10" data-hue="#FF2D20">
+      <div class="card">
+        <p class="kicker">10 · Projects <span class="org">Overcloud</span></p>
+        <h2 class="heading">KosherBot 2.0 <span class="tech">Laravel · Docker</span></h2>
+        <p class="body">A conversational bot for <strong>kosher certification lookups</strong>: it answers questions about products and establishments from a curated database. Laravel with supervisord workers and a containerized deployment.</p>
+        <ul class="metrics">
+          <li><strong>62</strong> of my commits</li>
+          <li><strong>68%</strong> of the repo</li>
+        </ul>
+        <a class="btn btn--primary" href="https://kosherbot.overcloud.us" target="_blank" rel="noopener">View live</a>
+      </div>
+    </section>
+
+    <section class="panel panel--right project" id="merkaz" data-station="11" data-hue="#FF2D20">
+      <div class="card">
+        <p class="kicker">11 · Projects <span class="org">Overcloud</span></p>
+        <h2 class="heading">Merkaz <span class="tech">Laravel · PHP</span></h2>
+        <p class="body">The server and portal behind a <strong>community platform running in production</strong> with a public domain and real users. Laravel backend: authentication, content, administration and APIs for the mobile clients.</p>
+        <ul class="metrics">
+          <li><strong>52</strong> of my commits</li>
+          <li><strong>24%</strong> of the repo</li>
+        </ul>
+        <a class="btn btn--primary" href="https://merkaz.mx" target="_blank" rel="noopener">merkaz.mx</a>
+      </div>
+    </section>
+
+    <section class="panel panel--left project" id="inventive-erp" data-station="12" data-hue="#E76F00">
+      <div class="card">
+        <p class="kicker">12 · Projects <span class="org">Blazt</span></p>
+        <h2 class="heading">Inventive ERP <span class="tech">Java · React</span></h2>
+        <p class="body">An enterprise ERP with a <strong>Java</strong> backend and a React/TypeScript frontend on PostgreSQL. Domain modeling, SQL migrations and the screens that consume them — from the database to the interface.</p>
+        <ul class="metrics">
+          <li><strong>45</strong> of my commits</li>
+          <li><strong>35%</strong> of the repo</li>
+        </ul>
+        <a class="btn btn--primary" href="https://erp.blazt.dev" target="_blank" rel="noopener">View live</a>
+      </div>
+    </section>
+
+    <section class="panel panel--right project" id="kinor" data-station="13" data-hue="#42d392">
+      <div class="card">
+        <p class="kicker">13 · Projects <span class="org">Overcloud</span></p>
+        <h2 class="heading">Kinor <span class="tech">Laravel · Vue · TypeScript</span></h2>
+        <p class="body">A management system built <strong>entirely by me — 100% of the repository</strong>. Vue + TypeScript SPA on a Laravel API, with WhatsApp integration and a Docker deployment.</p>
+        <ul class="metrics">
+          <li><strong>38</strong> of my commits</li>
+          <li><strong>100%</strong> of the repo</li>
+        </ul>
+        <a class="btn btn--primary" href="https://kinor.s2.devgeai.com" target="_blank" rel="noopener">View live</a>
+      </div>
+    </section>
+
+    <section class="panel panel--center" id="side" data-station="14" data-hue="#FF6A1A">
+      <div class="card card--wide">
+        <p class="kicker">14 · Open source</p>
+        <h2 class="heading">Side projects</h2>
+        <p class="body">My own projects, public on GitHub.</p>
+        <ul class="side-grid">
+          <li class="side-card">
+            <h3 class="side-card__name">ClipSync <span class="side-card__tech">Swift</span></h3>
+            <p class="side-card__note">A universal clipboard between <strong>macOS and Android over LAN</strong>: copy on one device, paste on the other. Bidirectional and cloud-free.</p>
+            <a class="side-card__link" href="https://github.com/josemasri/ClipSync" target="_blank" rel="noopener">GitHub</a>
+          </li>
+          <li class="side-card">
+            <h3 class="side-card__name">cmux <span class="side-card__tech">Swift · Ghostty</span></h3>
+            <p class="side-card__note">A macOS terminal with <strong>vertical tabs</strong>, built for orchestrating several AI agents coding in parallel.</p>
+            <a class="side-card__link" href="https://github.com/josemasri/cmux" target="_blank" rel="noopener">GitHub</a>
+          </li>
+          <li class="side-card">
+            <h3 class="side-card__name">petlyApp <span class="side-card__tech">Flutter</span></h3>
+            <p class="side-card__note">A <strong>pet care</strong> mobile app with an admin dashboard. One codebase for iOS and Android.</p>
+            <a class="side-card__link" href="https://github.com/josemasri/petlyApp" target="_blank" rel="noopener">GitHub</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="panel panel--center" id="mas" data-station="15" data-hue="#1BE7FF">
+      <div class="card card--wide">
+        <p class="kicker">15 · Archive</p>
+        <h2 class="heading">Other projects</h2>
+        <p class="body">Deployed projects with verified commits of mine. <strong>39 repos</strong> in total across Blazt and Overcloud.</p>
+        <ul class="more-grid">
+          <li class="more-card"><a href="https://onekosher.overcloud.us" target="_blank" rel="noopener"><span class="more-card__name">OneKosher</span><span class="more-card__tech">Laravel</span><span class="more-card__n">37</span></a></li>
+          <li class="more-card"><span class="more-card__inner"><span class="more-card__name">Javerim</span><span class="more-card__tech">Laravel</span><span class="more-card__n">28</span></span></li>
+          <li class="more-card"><a href="https://taxonomy.blazt.dev" target="_blank" rel="noopener"><span class="more-card__name">Taxonomy PoC</span><span class="more-card__tech">Java</span><span class="more-card__n">21</span></a></li>
+          <li class="more-card"><a href="https://tailyhub.overcloud.us" target="_blank" rel="noopener"><span class="more-card__name">TailyHub API</span><span class="more-card__tech">TypeScript</span><span class="more-card__n">20</span></a></li>
+          <li class="more-card"><a href="https://inventory.blazt.dev" target="_blank" rel="noopener"><span class="more-card__name">Be Inventory</span><span class="more-card__tech">Laravel</span><span class="more-card__n">19</span></a></li>
+          <li class="more-card"><a href="https://pushka.overcloud.us" target="_blank" rel="noopener"><span class="more-card__name">Pushka</span><span class="more-card__tech">Laravel</span><span class="more-card__n">18</span></a></li>
+          <li class="more-card"><span class="more-card__inner"><span class="more-card__name">Overcloud CRM</span><span class="more-card__tech">Laravel · Voice</span><span class="more-card__n">18</span></span></li>
+          <li class="more-card"><a href="https://admin-joetv.blazt.dev" target="_blank" rel="noopener"><span class="more-card__name">JoeTV</span><span class="more-card__tech">Node · React</span><span class="more-card__n">17</span></a></li>
+          <li class="more-card"><a href="https://algoritmia-trading.com" target="_blank" rel="noopener"><span class="more-card__name">Algoritmia</span><span class="more-card__tech">Landing</span><span class="more-card__n">16</span></a></li>
+          <li class="more-card"><a href="https://bestore.blazt.dev" target="_blank" rel="noopener"><span class="more-card__name">BeStore</span><span class="more-card__tech">Laravel</span><span class="more-card__n">16</span></a></li>
+          <li class="more-card"><a href="https://be-erp.blazt.dev" target="_blank" rel="noopener"><span class="more-card__name">Be ERP</span><span class="more-card__tech">Node · React</span><span class="more-card__n">12</span></a></li>
+          <li class="more-card"><a href="https://cartise.app" target="_blank" rel="noopener"><span class="more-card__name">Cartise</span><span class="more-card__tech">Node</span><span class="more-card__n">10</span></a></li>
+          <li class="more-card"><a href="https://chevrasms.overcloud.us" target="_blank" rel="noopener"><span class="more-card__name">ChevraSMS</span><span class="more-card__tech">Laravel</span><span class="more-card__n">9</span></a></li>
+          <li class="more-card"><a href="https://github.com/josemasri/playlist-simplifier" target="_blank" rel="noopener"><span class="more-card__name">playlist-simplifier</span><span class="more-card__tech">Node</span><span class="more-card__n">8</span></a></li>
+          <li class="more-card"><span class="more-card__inner"><span class="more-card__name">Cotizador D2D</span><span class="more-card__tech">Node</span><span class="more-card__n">6</span></span></li>
+          <li class="more-card"><a href="https://parking.blazt.dev" target="_blank" rel="noopener"><span class="more-card__name">Parking Reserve</span><span class="more-card__tech">Java</span><span class="more-card__n">5</span></a></li>
+        </ul>
+        <p class="more-note">The number is how many verified commits of mine each repository has.</p>
+      </div>
+    </section>
+
+    <section class="panel panel--contact" id="contacto" data-station="16" data-hue="#FF5C7A">
+      <div class="card card--center">
+        <p class="kicker">16 · Contact</p>
+        <h2 class="heading">Let's talk</h2>
+        <p class="body">I'm open to new projects and opportunities. Drop me a line, download my CV or take a look at my code.</p>
+        <div class="contact-actions">
+          <a class="btn btn--primary" href="mailto:josemasri222@gmail.com">Send a message</a>
+          <a class="btn btn--ghost" href="../assets/cv-jose-masri.pdf" download>Download CV</a>
+          <a class="btn btn--ghost" href="https://github.com/josemasri" target="_blank" rel="noopener">View GitHub</a>
+        </div>
+        <footer class="footer">© <span id="year">2026</span> José Masri · Mexico City</footer>
+      </div>
+    </section>
+
+  </main>
+
+  <noscript>
+    <div class="noscript">
+      <p>This portfolio uses 3D animation with JavaScript. Even so, all the content is readable right above. Contact: <a href="mailto:josemasri222@gmail.com">josemasri222@gmail.com</a> · <a href="https://github.com/josemasri">github.com/josemasri</a> · <a href="../assets/cv-jose-masri.pdf">Download CV</a>.</p>
+    </div>
+  </noscript>
+
+  <script type="module" src="../src/main.js"></script>
+</body>
+</html>
