@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { toonMat, glowMat, addOutline, blobTexture, dotTexture } from './toon.js';
 
-const damp = (a, b, lambda, dt) => THREE.MathUtils.damp(a, b, lambda, dt);
+const damp = THREE.MathUtils.damp;
 const clamp = THREE.MathUtils.clamp;
 
 export function buildPixel(scene) {
@@ -255,5 +255,5 @@ export function buildPixel(scene) {
     trailMat.opacity = moving * 0.35;
   }
 
-  return { group, trail, update, gesture, setHue };
+  return { group, update, gesture, setHue };
 }

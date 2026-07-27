@@ -1,10 +1,10 @@
-// toon.js — Helpers de cel-shading compartidos: gradientMap, materiales toon,
-// contorno inverted-hull, aura de fresnel, sombra blob y cielo de gradiente.
+// toon.js — Helpers de cel-shading compartidos: materiales toon, contorno
+// inverted-hull, texturas de sombra blob y punto, y cielo de gradiente.
 import * as THREE from 'three';
 
 // --- Gradient map de 3 bandas para el look anime (sombras duras) ---
 let _gradientMap = null;
-export function gradientMap() {
+function gradientMap() {
   if (_gradientMap) return _gradientMap;
   const colors = new Uint8Array([90, 175, 255]); // 3 bandas: sombra / medio / luz
   const tex = new THREE.DataTexture(colors, colors.length, 1, THREE.RedFormat);

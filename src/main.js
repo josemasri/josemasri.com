@@ -4,7 +4,7 @@ import Lenis from 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.mjs';
 import { buildWorld } from './world.js';
 import { buildPixel } from './character.js';
 import { makePostFX } from './postfx.js';
-import { STATIONS, STATION_NOTES } from './content.js';
+import { STATIONS } from './content.js';
 
 const damp = THREE.MathUtils.damp;
 const clamp = THREE.MathUtils.clamp;
@@ -35,6 +35,12 @@ const lowTier = window.matchMedia('(max-width: 820px)').matches || (navigator.ha
 const yearEl = document.getElementById('year');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+// La barra superior gana fondo en cuanto hay scroll. Va fuera de startExperience porque
+// también aplica al modo estático (sin WebGL o reduce-motion).
+const onScrollChrome = () => document.body.classList.toggle('scrolled', window.scrollY > 40);
+window.addEventListener('scroll', onScrollChrome, { passive: true });
+onScrollChrome();
+
 // ---------------------------------------------------------------------------
 // Modo estático (sin WebGL o reduce-motion): el contenido HTML ya es legible.
 // Si el 3D falla al iniciar, también caemos a estático (no pantalla en blanco/loader infinito).
@@ -61,7 +67,7 @@ function startExperience() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.2;
 
   // Si el contexto WebGL se pierde tras el arranque, degradamos a estático.
   canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); running = false; revealStatic(true); }, false);
@@ -72,7 +78,7 @@ function startExperience() {
   camera.position.set(0, 2, 8);
 
   // ---- Mundo + personaje ----
-  const world = buildWorld(scene);
+  const world = buildWorld(scene, camera);
   const pixel = buildPixel(scene);
   scene.add(pixel.group);
 
@@ -99,10 +105,8 @@ function startExperience() {
 
   // ---- Activación de secciones (IntersectionObserver) ----
   const sections = Array.from(document.querySelectorAll('.panel'));
-  const hudNum = document.getElementById('hud-num');
-  const hudLabel = document.getElementById('hud-label');
-  const hudPixel = document.getElementById('hud-pixel');
   let activeIndex = -1;
+  let activeSide = 1;   // +1 = Pixel a la derecha, -1 = a la izquierda
 
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -119,9 +123,8 @@ function startExperience() {
   function setActive(idx, sectionEl) {
     activeIndex = idx;
     const st = STATIONS[idx] || STATIONS[0];
-    if (hudNum) hudNum.textContent = String(idx).padStart(2, '0');
-    if (hudLabel) hudLabel.textContent = st.hud;
-    if (hudPixel) hudPixel.textContent = STATION_NOTES[st.id] || '';
+    // La tarjeta a la derecha empuja a Pixel a la izquierda, y al revés: nunca se cruzan.
+    activeSide = sectionEl && sectionEl.classList.contains('panel--right') ? -1 : 1;
     pixel.setHue(st.hue);
     pixel.gesture('arrive');
     if (st.kind === 'hero' || st.kind === 'contact') pixel.gesture('wave');
@@ -189,8 +192,10 @@ function startExperience() {
     prevP = smoothP;
 
     // ---- Cámara a lo largo del path ----
-    // baseT acotado a 0.985 para que forward nunca degenere a cero ni la mira colapse al tope.
-    const baseT = clamp(smoothP, 0, 0.985);
+    // Acotado para que forward nunca degenere a cero ni la mira colapse al tope. El techo
+    // queda por debajo de 1 a propósito: las islas se colocan hasta t = (N-1)/N, así que
+    // con un techo más alto la cámara las rebasa y la última estación se ve vacía.
+    const baseT = clamp(smoothP, 0, 0.94);
     world.curve.getPointAt(baseT, camPos);
     world.curve.getPointAt(baseT + 0.012, aheadPos);
     forward.copy(aheadPos).sub(camPos).normalize();
@@ -208,15 +213,15 @@ function startExperience() {
     camera.lookAt(aheadPos.x, aheadPos.y + 0.95, aheadPos.z);
 
     // ---- Pixel frente a la cámara, mirándola ----
-    // En hero/contacto (tarjeta centrada) Pixel se hace a un lado para no quedar tapado.
-    // En las secciones de tarjeta ancha (grid) se aparta más y se aleja, porque la
-    // tarjeta ocupa casi todo el ancho.
+    // Pixel nunca debe cruzar la tarjeta: es decorativo y taparía texto o un CTA.
+    // hero/contacto: la tarjeta va desplazada a la izquierda -> Pixel bien a la derecha.
+    // grid: la tarjeta ocupa casi todo el ancho -> se aparta más y se aleja.
     const kind = (STATIONS[activeIndex] || {}).kind;
     const centered = kind === 'hero' || kind === 'contact';
     const wide = kind === 'grid';
-    pixOffY = damp(pixOffY, wide ? -1.45 : -0.85, 4, dt);
-    pixOffX = damp(pixOffX, wide ? 5.8 : (centered ? 4.1 : 0), 3.5, dt);
-    pixDist = damp(pixDist, wide ? 8.6 : (centered ? 7.6 : 6.8), 4, dt);
+    pixOffY = damp(pixOffY, wide ? -1.45 : -0.95, 4, dt);
+    pixOffX = damp(pixOffX, activeSide * (wide ? 6.4 : (centered ? 6.2 : 4.6)), 3.5, dt);
+    pixDist = damp(pixDist, wide ? 9.2 : (centered ? 8.4 : 7.2), 4, dt);
     camera.getWorldDirection(camDir);
     pixelPos.copy(camera.position)
       .addScaledVector(camDir, pixDist)

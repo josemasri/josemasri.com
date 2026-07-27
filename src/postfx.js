@@ -1,6 +1,6 @@
 // postfx.js — Post-procesado: bloom por umbral sobre emisivos brillantes + OutputPass.
 // Se usa el umbral (no swap de materiales por layers) por robustez: los emisivos
-// (ojos, sol, cristales, toro, riel) son los únicos elementos muy brillantes y son
+// (ojos, luna, cristales, toro, riel) son los únicos elementos muy brillantes y son
 // los que "estallan", dejando el toon mate del mundo intacto.
 import * as THREE from 'three';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -9,41 +9,29 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 export function makePostFX(renderer, scene, camera, { enabled = true } = {}) {
-  let composer = null;
-  let bloom = null;
-  let renderPass = null;
-  let useBloom = enabled;
-
-  // Solo construimos el pipeline (y sus ~13 render targets HalfFloat) si el bloom está activo.
-  if (enabled) {
-    const size = renderer.getSize(new THREE.Vector2());
-    composer = new EffectComposer(renderer);
-    composer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-    composer.setSize(size.x, size.y);
-
-    renderPass = new RenderPass(scene, camera);
-    composer.addPass(renderPass);
-
-    // strength, radius, threshold — umbral alto y fuerza contenida: el glow debe insinuarse
-    // en los emisivos, no derramarse sobre las tarjetas de contenido.
-    bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.34, 0.4, 0.85);
-    composer.addPass(bloom);
-
-    composer.addPass(new OutputPass());
+  // Sin bloom no construimos el pipeline (ni sus ~13 render targets HalfFloat):
+  // render() cae directo al renderer y setSize() no tiene nada que redimensionar.
+  if (!enabled) {
+    return {
+      render: () => renderer.render(scene, camera),
+      setSize: () => {},
+    };
   }
 
-  function render() {
-    if (useBloom && composer) composer.render();
-    else renderer.render(scene, camera);
-  }
+  const size = renderer.getSize(new THREE.Vector2());
+  const composer = new EffectComposer(renderer);
+  composer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+  composer.setSize(size.x, size.y);
+  composer.addPass(new RenderPass(scene, camera));
 
-  function setSize(w, h) {
-    if (composer) composer.setSize(w, h);
-    if (bloom) bloom.setSize(w, h);
-  }
+  // strength, radius, threshold — umbral alto y fuerza contenida: el glow debe insinuarse
+  // en los emisivos, no derramarse sobre las tarjetas de contenido.
+  const bloom = new UnrealBloomPass(new THREE.Vector2(size.x, size.y), 0.18, 0.35, 0.92);
+  composer.addPass(bloom);
+  composer.addPass(new OutputPass());
 
-  function setEnabled(v) { useBloom = v && !!composer; }
-  function setCamera(cam) { if (renderPass) renderPass.camera = cam; }
-
-  return { composer, bloom, render, setSize, setEnabled, setCamera };
+  return {
+    render: () => composer.render(),
+    setSize: (w, h) => { composer.setSize(w, h); bloom.setSize(w, h); },
+  };
 }

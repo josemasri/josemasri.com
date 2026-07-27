@@ -1,100 +1,70 @@
-# josemasri.com — Landing 3D "Pixel: El Arranque"
+# josemasri.com
 
-Portafolio personal interactivo de **José Masri** (Full-Stack Software Engineer).
-Una experiencia _scrollytelling_ 3D con [three.js](https://threejs.org): **Pixel**, un robot-guía
-cel-shaded estilo caricatura/anime, te sigue con la mirada y te lleva por un archipiélago
-nocturno de neón descubriendo la experiencia, los proyectos y la info de José conforme haces scroll.
+Portafolio personal de **José Masri** (Full-Stack Software Engineer), en español e inglés.
 
-**17 estaciones:** hero · sobre mí · experiencia · skills · 10 proyectos destacados ·
-side projects · archivo · contacto.
-
-Todo el contenido vive en **HTML semántico**, así que es legible e indexable aun sin WebGL.
+El contenido vive en HTML semántico y es legible sin JavaScript. Sobre él corre una escena 3D
+con [three.js](https://threejs.org) —un mundo low-poly y un personaje procedural— que funciona
+como fondo: si compite con el texto, gana el texto.
 
 **Bilingüe:** español en `/` (`index.html`) e inglés en `/en/` (`en/index.html`). Ambas páginas
-comparten CSS, módulos 3D y assets; se enlazan entre sí con el botón `ES`/`EN` de la barra y con
-`hreflang` para que Google indexe cada idioma por separado.
+comparten CSS, módulos 3D y assets; se enlazan con el botón `ES`/`EN` de la barra y con `hreflang`
+para que cada idioma se indexe por separado.
 
 ## Cómo correrlo en local
 
-Necesita servirse por HTTP (los módulos ES no cargan con `file://`). Cualquiera de estas:
+Necesita servirse por HTTP (los módulos ES no cargan con `file://`):
 
 ```bash
-# opción 1: Python
-python3 -m http.server 8099
-# opción 2: Node
-npx serve .
+python3 -m http.server 8099   # o: npx serve .
 ```
 
 Luego abre `http://localhost:8099`.
 
 ## Despliegue
 
-Es 100% estático (HTML + CSS + JS + CDNs). Súbelo tal cual a:
-**GitHub Pages, Netlify, Vercel o Cloudflare Pages**. No hay build step.
-> Las dependencias (three.js, Lenis, Google Fonts) se cargan por CDN, así que el sitio
-> necesita conexión a internet para el modo 3D.
+100% estático, sin build step. Súbelo tal cual a GitHub Pages, Netlify, Vercel o Cloudflare Pages.
 
-## Editar tu contenido
+> Las dependencias (three.js, Lenis, Google Fonts) se cargan por CDN, así que el modo 3D
+> necesita conexión a internet. Sin ella, el contenido igual se lee sobre el gradiente CSS.
 
-- **Textos, proyectos y enlaces:** todo el contenido visible vive en `index.html` (español) y
-  `en/index.html` (inglés), como HTML semántico real. Edita ahí títulos, descripciones y los
-  `href` de GitHub/email. **Al tocar uno, actualiza el otro:** son documentos independientes.
-- **Datos para la escena 3D** (colores por lenguaje, estaciones, notas del HUD): `src/content.js`.
-  Las etiquetas y notas del HUD son bilingües: `content.js` lee `document.documentElement.lang`
-  y resuelve `LOCALE` (`es` | `en`) solo. Los `id` de las `<section>` son los mismos en ambos
-  idiomas — son la llave contra `STATIONS`, así que no los traduzcas.
+## Editar el contenido
+
+- **Textos, proyectos y enlaces:** todo lo visible está en `index.html` (es) y `en/index.html` (en)
+  como HTML semántico. **Al tocar uno, actualiza el otro:** son documentos independientes.
+- **Estaciones del recorrido 3D:** `src/content.js`. Es lo único que consume la escena.
 - **Paleta y tipografías:** variables CSS al inicio de `styles/main.css`.
-- **CV:** `assets/cv-jose-masri.pdf`. Se enlaza desde el hero, la sección de experiencia y contacto.
+- **CV:** `assets/cv-jose-masri.pdf`, enlazado desde hero, experiencia y contacto.
 
-> **Al agregar o quitar estaciones**, mantén sincronizados el arreglo `STATIONS` de
-> `src/content.js` y los `data-station` de `index.html` (deben ser índices consecutivos
-> desde 0). El path 3D, las islas y las nubes se dimensionan solos a partir de
-> `STATIONS.length`; el cielo y la luna viven en un rig que sigue a la cámara, así que
-> el recorrido puede crecer sin que la cámara los alcance.
-
-## Los proyectos son datos verificados
-
-Los proyectos de **Blazt** y **Overcloud** se seleccionaron consultando la API de Coolify de
-ambas instancias (para obtener repos y URLs desplegadas) y cruzándolos contra la API de GitHub,
-contando solo commits de José. Sus tres identidades de commit son:
-
-```
-Jose Masri <ae_jmsalame@contractor.indeed.com>          (la mayoría — no vinculada a su cuenta GitHub)
-Jose Masri <58571583+josemasri@users.noreply.github.com>
-Jose Masri <josemasri222@gmail.com>
-```
-
-> Ojo: filtrar por `?author=josemasri` en la API de GitHub **no basta** — la mayoría de sus
-> commits usan un email no vinculado a su cuenta y quedan fuera. Hay que filtrar por email.
-
-Resultado: **39 repos con commits suyos, 1,763 commits en total**. Las cifras que aparecen en
-cada tarjeta (`commits míos`, `% del repo`) salen de ahí. 25 repos más quedaron fuera por no
-tener acceso de lectura desde su cuenta.
+> **Al agregar o quitar secciones**, mantén sincronizados el arreglo `STATIONS` de
+> `src/content.js` y los `data-station` del HTML: deben ser índices consecutivos desde 0, en el
+> mismo orden, y los `id` de las `<section>` son la llave contra `STATIONS` (no los traduzcas).
+> El path 3D, las islas y las nubes se dimensionan solos a partir de `STATIONS.length`.
 
 ## Estructura
 
 ```
-index.html          Documento raíz (es-MX): import map, overlay semántico (contenido real), HUD, fallback
-en/index.html       Misma página en inglés (lang="en"); reutiliza ../styles, ../src y ../assets
-styles/main.css     Diseño del overlay, tipografías, glass cards, timeline, rejillas, HUD, responsive
+index.html          Documento raíz (es-MX): import map, contenido semántico, fallback
+en/index.html       Misma página en inglés; reutiliza ../styles, ../src y ../assets
+styles/main.css     Overlay: tipografía, tarjetas, timeline, rejillas, responsive
 assets/
-  cv-jose-masri.pdf CV descargable (enlazado desde hero, experiencia y contacto)
+  cv-jose-masri.pdf CV descargable
   og-image.png      Preview 1200x630 para redes
 src/
-  main.js           Orquestador: renderer, cámara por el path, scroll (Lenis), cursor, loop, fallbacks
-  character.js      "Pixel": robot procedural cel-shaded (ojos que siguen el cursor, antena, estela)
-  world.js          Archipiélago: rig de cielo/luna, niebla, path, islas, nubes, partículas, luces
-  toon.js           Helpers cel-shading: gradientMap, contorno inverted-hull, cielo
-  postfx.js         Bloom selectivo (UnrealBloomPass) + OutputPass
-  content.js        Datos: estaciones, colores, experiencia, proyectos verificados, notas del HUD
+  main.js           Orquestador: renderer, cámara por el path, scroll (Lenis), loop, fallbacks
+  character.js      "Pixel": robot procedural cel-shaded (sigue el cursor, antena, estela)
+  world.js          Mundo: cielo, luna, niebla, path, islas, nubes, partículas, luces
+  toon.js           Helpers cel-shading: materiales toon, contorno inverted-hull, cielo
+  postfx.js         Bloom por umbral (UnrealBloomPass) + OutputPass
+  content.js        Estaciones del recorrido y colores de la escena
 ```
 
 ## Accesibilidad y rendimiento
 
 - **Sin WebGL / sin JS:** el contenido se muestra sobre un gradiente CSS, totalmente legible.
-- **`prefers-reduced-motion`:** se desactiva el scroll-jacking y la animación; layout estático.
+- **`prefers-reduced-motion`:** sin scroll suave ni animación de entrada; layout estático.
 - **Móvil / equipos lentos:** se reduce el pixel ratio y se apaga el bloom automáticamente.
-- El render se pausa cuando la pestaña está oculta.
+- Un watchdog revela el contenido a los 6s si un CDN falla, para que el loader nunca se cuelgue.
+- El render se pausa con la pestaña oculta, y el botón `3D` lo pausa a voluntad.
 
 ## Stack
 

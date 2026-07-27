@@ -2,25 +2,29 @@
 // islas por estación, nubes (InstancedMesh), partículas, sol y luces.
 import * as THREE from 'three';
 import { toonMat, glowMat, addOutline, skyMaterial, dotTexture } from './toon.js';
-import { PALETTE, STATIONS } from './content.js';
+import { HUES, STATIONS } from './content.js';
 
-export function buildWorld(scene) {
+export function buildWorld(scene, camera) {
   const group = new THREE.Group();
   scene.add(group);
 
-  // ---- Paleta nocturna (local; los acentos neón siguen usando PALETTE) ----
-  const NIGHT_TOP = '#1c2a66';   // cima del cielo, azul profundo
-  const NIGHT_MID = '#321f63';   // horizonte púrpura
-  const NIGHT_BOT = '#06060e';   // base casi negra
-  const NIGHT_FOG = '#0f1230';   // niebla índigo oscuro
+  // ---- Paleta nocturna del cielo (local; los acentos de estación vienen de HUES) ----
+  // Noche azul, no negra: si la base baja de ~#0d0e1c las islas y nubes se vuelven
+  // siluetas planas y la escena deja de leerse como un mundo.
+  const NIGHT_TOP = '#26326b';   // cima del cielo, azul profundo
+  const NIGHT_MID = '#3a2a6b';   // horizonte púrpura
+  const NIGHT_BOT = '#121430';   // base: azul oscuro, nunca negro
+  const NIGHT_FOG = '#1d2350';   // niebla índigo
 
   // ---- Fondo + niebla ----
-  scene.background = new THREE.Color('#0a0c1e');
-  scene.fog = new THREE.FogExp2(NIGHT_FOG, 0.05);
+  scene.background = new THREE.Color('#161a3d');
+  // Densidad contenida: con 0.05 la niebla se comía las islas lejanas por completo.
+  scene.fog = new THREE.FogExp2(NIGHT_FOG, 0.028);
 
-  // ---- Rig celeste: cielo + luna viajan con la cámara ----
-  // Son cuerpos "al infinito": mantenerlos a distancia constante evita que la cámara
-  // los alcance al final del recorrido (el path crece con el número de estaciones).
+  // ---- Rig celeste: el cielo viaja con la cámara ----
+  // Es un cuerpo "al infinito": mantenerlo a distancia constante evita que la cámara
+  // lo alcance al final del recorrido (el path crece con el número de estaciones).
+  // Solo copia la POSICIÓN, no la orientación: el horizonte del gradiente debe quedar quieto.
   const skyRig = new THREE.Group();
   scene.add(skyRig);
 
@@ -31,20 +35,34 @@ export function buildWorld(scene) {
   );
   skyRig.add(sky);
 
-  // ---- Luna-núcleo (emisivo frío, bloom) ----
-  const sun = new THREE.Mesh(
-    new THREE.CircleGeometry(24, 48),
-    glowMat('#dCEBFF', { transparent: true, opacity: 0.95, fog: false })
+  // ---- Luna (emisiva, capta el bloom) ----
+  // Cuelga de la CÁMARA, no del skyRig: así su posición en pantalla es realmente fija.
+  // Con un offset en mundo se arrastraría al centro cada vez que el path gira, y un cuerpo
+  // brillante detrás de una tarjeta o de la barra de nav mata el contraste del texto.
+  // Coordenadas locales a la cámara: +x derecha, +y arriba, -z al frente.
+  const moonRig = new THREE.Group();
+  moonRig.position.set(153, 101, -300);   // cuadrante superior derecho, despejado de la nav
+  camera.add(moonRig);
+  // La cámara tiene que estar en el grafo para que sus hijos se rendericen.
+  scene.add(camera);
+
+  const moon = new THREE.Mesh(
+    new THREE.CircleGeometry(11, 48),
+    glowMat('#d6e4ff', { transparent: true, opacity: 0.88, fog: false })
   );
-  sun.position.set(44, 30, -260);
-  skyRig.add(sun);
-  const sunGlow = new THREE.Mesh(
-    new THREE.CircleGeometry(54, 48),
-    glowMat(PALETTE.cian ?? '#1BE7FF', { transparent: true, opacity: 0.3, fog: false, blending: THREE.AdditiveBlending, depthWrite: false })
+  moonRig.add(moon);
+  // El halo va con textura radial, no como disco plano: un CircleGeometry aditivo
+  // se ve como una dona de borde duro en vez de un resplandor.
+  const moonGlow = new THREE.Mesh(
+    new THREE.PlaneGeometry(90, 90),
+    new THREE.MeshBasicMaterial({
+      map: dotTexture(), color: new THREE.Color('#9fc6ff'),
+      transparent: true, opacity: 0.3, fog: false,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    })
   );
-  sunGlow.position.copy(sun.position);
-  sunGlow.position.z -= 1;
-  skyRig.add(sunGlow);
+  moonGlow.position.z = -1;
+  moonRig.add(moonGlow);
 
   // ---- Path de vuelo (CatmullRom ascendente y serpenteante) ----
   const N = STATIONS.length;
@@ -62,8 +80,8 @@ export function buildWorld(scene) {
 
   // ---- Riel de luz (tube sobre el path) ----
   const tubeGeo = new THREE.TubeGeometry(curve, 220, 0.07, 8, false);
-  const tubeMat = glowMat(PALETTE.azulCobalto, {
-    transparent: true, opacity: 0.3, depthWrite: false, fog: true,
+  const tubeMat = glowMat(HUES.azul, {
+    transparent: true, opacity: 0.2, depthWrite: false, fog: true,
   });
   const rail = new THREE.Mesh(tubeGeo, tubeMat);
   scene.add(rail);
@@ -71,7 +89,6 @@ export function buildWorld(scene) {
   // ---- Islas por estación ----
   const _tmp = new THREE.Vector3();
   const crystals = [];
-  const stations = [];
 
   STATIONS.forEach((st, i) => {
     const tAt = N <= 1 ? 0 : i / N; // las estaciones quedan ligeramente "adelante" en el path
@@ -85,29 +102,30 @@ export function buildWorld(scene) {
 
     const r = 2.6 + (i % 3) * 0.5;
     // Tapa (lavanda fría: lit pero acorde a la noche)
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.92, 0.7, 7), toonMat('#9aa3d8'));
-    addOutline(cap, 0.04, '#0a0c1e');
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(r, r * 0.92, 0.7, 7), toonMat('#b3bce8'));
+    addOutline(cap, 0.04, '#141838');
     island.add(cap);
-    // Base cónica invertida (índigo profundo)
-    const cone = new THREE.Mesh(new THREE.ConeGeometry(r * 0.95, 2.4, 7), toonMat('#171a3e'));
+    // Base cónica invertida. Es la superficie más grande de cada isla: si va demasiado
+    // oscura, la mitad inferior de la escena se convierte en triángulos negros.
+    const cone = new THREE.Mesh(new THREE.ConeGeometry(r * 0.95, 2.4, 7), toonMat('#3b4177'));
     cone.position.y = -1.5;
     cone.rotation.y = Math.PI / 7;
-    addOutline(cone, 0.04, '#16182E');
+    addOutline(cone, 0.04, '#141838');
     island.add(cone);
 
     // Decoración: pequeños prismas / árboles toon según tipo
     const deco = (st.kind === 'project') ? 'pillar' : 'crystal';
     if (deco === 'pillar') {
-      const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.26, 1.1, 6), toonMat('#3D5BFF'));
+      const pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.26, 1.1, 6), toonMat('#4E6BFF'));
       pillar.position.set(r * 0.3, 0.9, -r * 0.2);
-      addOutline(pillar, 0.03, '#16182E');
+      addOutline(pillar, 0.03, '#141838');
       island.add(pillar);
     } else {
       // un par de "rocas" toon
       for (let k = 0; k < 2; k++) {
-        const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(0.4 + k * 0.2, 0), toonMat('#7a83b8'));
+        const rock = new THREE.Mesh(new THREE.DodecahedronGeometry(0.4 + k * 0.2, 0), toonMat('#8f98cd'));
         rock.position.set((k ? 1 : -1) * r * 0.4, 0.45, (k ? -1 : 1) * r * 0.3);
-        addOutline(rock, 0.03, '#0a0c1e');
+        addOutline(rock, 0.03, '#141838');
         island.add(rock);
       }
     }
@@ -120,8 +138,8 @@ export function buildWorld(scene) {
     crystal.position.y = 1.7;
     island.add(crystal);
     const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(0.95, 0.04, 10, 28),
-      glowMat(st.hue, { transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })
+      new THREE.TorusGeometry(0.95, 0.03, 10, 28),
+      glowMat(st.hue, { transparent: true, opacity: 0.28, blending: THREE.AdditiveBlending, depthWrite: false, fog: true })
     );
     ring.position.y = 1.7;
     ring.rotation.x = Math.PI / 2.4;
@@ -129,7 +147,6 @@ export function buildWorld(scene) {
     crystals.push({ crystal, ring, phase: i * 0.7 });
 
     group.add(island);
-    stations.push({ index: i, position: center.clone(), hue: st.hue });
   });
 
   // ---- Nubes (InstancedMesh, parallax) ----
@@ -140,7 +157,7 @@ export function buildWorld(scene) {
   const CLOUD_FAR = 60;
   const cloudCount = 34;
   const cloudGeo = new THREE.IcosahedronGeometry(1, 0);
-  const clouds = new THREE.InstancedMesh(cloudGeo, toonMat('#5c64a0', { transparent: true, opacity: 0.5 }), cloudCount);
+  const clouds = new THREE.InstancedMesh(cloudGeo, toonMat('#7c86c4', { transparent: true, opacity: 0.45 }), cloudCount);
   const cloudData = [];
   const _m = new THREE.Matrix4();
   const _q = new THREE.Quaternion();
@@ -161,8 +178,8 @@ export function buildWorld(scene) {
   clouds.instanceMatrix.needsUpdate = true;
   group.add(clouds);
 
-  // ---- Partículas "polen tech" ----
-  const pCount = 1100;
+  // ---- Partículas de fondo ----
+  const pCount = 420;
   const pPos = new Float32Array(pCount * 3);
   const spanZ = N * 15;
   for (let i = 0; i < pCount; i++) {
@@ -173,26 +190,27 @@ export function buildWorld(scene) {
   const pGeo = new THREE.BufferGeometry();
   pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
   const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
-    color: new THREE.Color(PALETTE.amarilloChispa),
-    size: 0.2, map: dotTexture(), alphaTest: 0.01, transparent: true, opacity: 0.7,
+    color: new THREE.Color('#c8d4ff'),
+    size: 0.16, map: dotTexture(), alphaTest: 0.01, transparent: true, opacity: 0.42,
     blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true, fog: true,
   }));
   group.add(particles);
 
-  // ---- Luces (noche: key de luna fría + rim neón magenta) ----
-  const key = new THREE.DirectionalLight(new THREE.Color('#aab6ff'), 1.15);
+  // ---- Luces ----
+  // key = luna fría; hemi + ambient dan el relleno que evita las siluetas negras;
+  // los dos rim (cálido y frío) separan los volúmenes del fondo por los costados.
+  const key = new THREE.DirectionalLight(new THREE.Color('#c2ccff'), 1.35);
   key.position.set(44, 34, -60);
   scene.add(key);
-  const hemi = new THREE.HemisphereLight(new THREE.Color('#46599c'), new THREE.Color('#120e2c'), 0.6);
+  const hemi = new THREE.HemisphereLight(new THREE.Color('#7183c9'), new THREE.Color('#241f4d'), 1.0);
   scene.add(hemi);
-  const rim = new THREE.PointLight(new THREE.Color(PALETTE.magentaKi), 0.9, 70);
+  const rim = new THREE.PointLight(new THREE.Color(HUES.magenta), 0.5, 80);
   rim.position.set(-22, 12, -30);
   scene.add(rim);
-  const rim2 = new THREE.PointLight(new THREE.Color('#1BE7FF'), 0.5, 70);
-  rim2.position.set(20, 6, -10);
-  scene.add(rim2);
-  const fill = new THREE.AmbientLight(0xffffff, 0.2);
-  scene.add(fill);
+  const rimCool = new THREE.PointLight(new THREE.Color('#7fb4ff'), 0.4, 80);
+  rimCool.position.set(20, 6, -10);
+  scene.add(rimCool);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
 
   // ---- Update ----
   let t = 0;
@@ -212,11 +230,11 @@ export function buildWorld(scene) {
       c.ring.rotation.z += dt * 0.5;
     }
 
-    // sol pulsa
-    sun.scale.setScalar(1 + Math.sin(t * 0.8) * 0.03);
+    // luna pulsa
+    moon.scale.setScalar(1 + Math.sin(t * 0.8) * 0.03);
 
     // riel de luz parpadea suave
-    tubeMat.opacity = 0.22 + Math.sin(t * 1.5) * 0.08;
+    tubeMat.opacity = 0.16 + Math.sin(t * 1.5) * 0.05;
 
     // nubes derivan hacia afuera y reaparecen en el borde interior de su carril
     for (let i = 0; i < cloudCount; i++) {
@@ -234,15 +252,5 @@ export function buildWorld(scene) {
     particles.rotation.y += dt * 0.02;
   }
 
-  function dispose() {
-    [group, skyRig].forEach((root) => root.traverse((o) => {
-      if (o.geometry) o.geometry.dispose();
-      if (o.material) {
-        const mats = Array.isArray(o.material) ? o.material : [o.material];
-        mats.forEach((m) => m.dispose());
-      }
-    }));
-  }
-
-  return { group, curve, stations, sun, skyRig, update, dispose };
+  return { curve, update };
 }
