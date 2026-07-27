@@ -6,9 +6,13 @@ El contenido vive en HTML semántico y es legible sin JavaScript. Sobre él corr
 con [three.js](https://threejs.org) —un mundo low-poly y un personaje procedural— que funciona
 como fondo: si compite con el texto, gana el texto.
 
-**Bilingüe:** español en `/` (`index.html`) e inglés en `/en/` (`en/index.html`). Ambas páginas
-comparten CSS, módulos 3D y assets; se enlazan con el botón `ES`/`EN` de la barra y con `hreflang`
-para que cada idioma se indexe por separado.
+**Bilingüe:** inglés en `/` (`index.html`) y español en `/es/` (`es/index.html`). El inglés es el
+predeterminado porque la mayoría de los reclutadores que llegan al dominio leen en inglés. Ambas
+páginas comparten CSS, módulos 3D y assets; se enlazan con el botón `EN`/`ES` de la barra y con
+`hreflang` para que cada idioma se indexe por separado (`x-default` apunta a la raíz).
+
+`/en/` quedó como stub de redirección a la raíz, para que los enlaces antiguos no den 404. Es
+`noindex` y su `canonical` apunta a `/`.
 
 ## Cómo correrlo en local
 
@@ -29,8 +33,9 @@ Luego abre `http://localhost:8099`.
 
 ## Editar el contenido
 
-- **Textos, proyectos y enlaces:** todo lo visible está en `index.html` (es) y `en/index.html` (en)
+- **Textos, proyectos y enlaces:** todo lo visible está en `index.html` (en) y `es/index.html` (es)
   como HTML semántico. **Al tocar uno, actualiza el otro:** son documentos independientes.
+  Ojo con las rutas relativas: la raíz usa `./`, y `/es/` usa `../`.
 - **Estaciones del recorrido 3D:** `src/content.js`. Es lo único que consume la escena.
 - **Paleta y tipografías:** variables CSS al inicio de `styles/main.css`.
 - **CV:** `assets/cv-jose-masri.pdf`, enlazado desde hero, experiencia y contacto.
@@ -43,8 +48,9 @@ Luego abre `http://localhost:8099`.
 ## Estructura
 
 ```
-index.html          Documento raíz (es-MX): import map, contenido semántico, fallback
-en/index.html       Misma página en inglés; reutiliza ../styles, ../src y ../assets
+index.html          Documento raíz (en): import map, contenido semántico, fallback
+es/index.html       Misma página en español; reutiliza ../styles, ../src y ../assets
+en/index.html       Stub de redirección a / (compatibilidad con enlaces antiguos)
 styles/main.css     Overlay: tipografía, tarjetas, timeline, rejillas, responsive
 assets/
   cv-jose-masri.pdf CV descargable

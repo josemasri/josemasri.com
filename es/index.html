@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es-MX">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>José Masri — Full-Stack Software Engineer</title>
-  <meta name="description" content="José Masri, Full-Stack Software Engineer based in Mexico City. 7+ years building backends, APIs and production integrations: Node/TypeScript, Laravel, Java, React." />
+  <meta name="description" content="José Masri, Full-Stack Software Engineer en Ciudad de México. 7+ años construyendo backends, APIs e integraciones en producción: Node/TypeScript, Laravel, Java, React." />
   <meta name="author" content="José Masri" />
   <meta name="theme-color" content="#121430" />
-  <link rel="canonical" href="https://josemasri.com/" />
+  <link rel="canonical" href="https://josemasri.com/es/" />
 
-  <!-- Languages: English is the default at the root, Spanish lives at /es/ -->
+  <!-- Idiomas: el inglés es el predeterminado en la raíz; el español vive en /es/ -->
   <link rel="alternate" hreflang="en" href="https://josemasri.com/" />
   <link rel="alternate" hreflang="es-MX" href="https://josemasri.com/es/" />
   <link rel="alternate" hreflang="x-default" href="https://josemasri.com/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://josemasri.com/" />
+  <meta property="og:url" content="https://josemasri.com/es/" />
   <meta property="og:title" content="José Masri — Full-Stack Software Engineer" />
-  <meta property="og:description" content="7+ years building backends, APIs and production integrations." />
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:locale:alternate" content="es_MX" />
+  <meta property="og:description" content="7+ años construyendo backends, APIs e integraciones en producción." />
+  <meta property="og:locale" content="es_MX" />
+  <meta property="og:locale:alternate" content="en_US" />
   <meta property="og:image" content="https://josemasri.com/assets/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -28,17 +28,17 @@
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="José Masri — Full-Stack Software Engineer" />
-  <meta name="twitter:description" content="7+ years building backends, APIs and production integrations." />
+  <meta name="twitter:description" content="7+ años construyendo backends, APIs e integraciones en producción." />
   <meta name="twitter:image" content="https://josemasri.com/assets/og-image.png" />
 
-  <!-- Fonts -->
+  <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="./styles/main.css" />
+  <link rel="stylesheet" href="../styles/main.css" />
 
-  <!-- Import map for three.js + addons -->
+  <!-- Import map para three.js + addons -->
   <script type="importmap">
   {
     "imports": {
@@ -48,8 +48,8 @@
   }
   </script>
 
-  <!-- Watchdog (CLASSIC script, not a module): if the ESM module or a CDN fails and never
-       removes is-loading, we still reveal the static content after 6s so the loader can't hang. -->
+  <!-- Watchdog (script CLÁSICO, no module): si el módulo ESM o un CDN falla y nunca quita
+       is-loading, igual revelamos el contenido estático tras 6s para no dejar loader infinito. -->
   <script>
     window.addEventListener('DOMContentLoaded', function () {
       window.__pixelWatchdog = setTimeout(function () {
@@ -65,106 +65,106 @@
 </head>
 
 <body class="is-loading">
-  <a class="skip-link" href="#content">Skip to content</a>
+  <a class="skip-link" href="#content">Saltar al contenido</a>
 
-  <!-- 3D background canvas (decorative; the real content lives in the semantic overlay) -->
+  <!-- Lienzo 3D de fondo (decorativo; el contenido real vive en el overlay semántico) -->
   <canvas id="scene" aria-hidden="true"></canvas>
 
-  <!-- Loading screen -->
+  <!-- Pantalla de carga -->
   <div id="loader" class="loader" role="status" aria-live="polite">
     <div class="loader__bar"><span class="loader__fill"></span></div>
-    <p class="loader__text">Loading<span class="loader__dots">…</span></p>
+    <p class="loader__text">Cargando<span class="loader__dots">…</span></p>
   </div>
 
-  <!-- Brand / minimal nav -->
+  <!-- Marca / nav mínima -->
   <header class="brand">
     <a class="brand__mark" href="#hero">JM</a>
-    <nav class="brand__nav" aria-label="Sections">
-      <a href="#sobre-mi">Profile</a>
-      <a href="#experiencia">Experience</a>
+    <nav class="brand__nav" aria-label="Secciones">
+      <a href="#sobre-mi">Perfil</a>
+      <a href="#experiencia">Experiencia</a>
       <a href="#skills">Stack</a>
-      <a href="#proyectos">Projects</a>
-      <a href="#contacto">Contact</a>
+      <a href="#proyectos">Proyectos</a>
+      <a href="#contacto">Contacto</a>
     </nav>
     <div class="brand__actions">
-      <a class="brand__lang" href="./es/" hreflang="es-MX" lang="es-MX" title="Leer esta página en español">ES</a>
-      <button class="brand__toggle" id="toggle-motion" type="button" aria-pressed="false" aria-label="Pause or resume the 3D animation" title="Pause or resume the 3D animation">
+      <a class="brand__lang" href="../" hreflang="en" lang="en" title="Read this page in English">EN</a>
+      <button class="brand__toggle" id="toggle-motion" type="button" aria-pressed="false" aria-label="Pausar o activar la animación 3D" title="Pausar o activar la animación 3D">
         <span class="brand__toggle-dot"></span> 3D
       </button>
     </div>
   </header>
 
-  <!-- ===== CONTENT (semantic overlay + accessible fallback) ===== -->
+  <!-- ===== CONTENIDO (overlay semántico + fallback accesible) ===== -->
   <main id="content">
 
     <section class="panel panel--hero" id="hero" data-station="0">
       <div class="card card--center">
-        <p class="eyebrow"><span class="eyebrow__dot"></span> Mexico City · Open to new opportunities</p>
+        <p class="eyebrow"><span class="eyebrow__dot"></span> Ciudad de México · Abierto a nuevas oportunidades</p>
         <h1 class="title">José Masri</h1>
         <p class="role">Full-Stack Software Engineer</p>
-        <p class="lede"><strong>7+ years</strong> building backends, APIs and production integrations. Currently on <strong>Indeed's</strong> JavaScript Ecosystem team, through AgileEngine.</p>
+        <p class="lede"><strong>7+ años</strong> construyendo backends, APIs e integraciones en producción. Hoy en el equipo de JavaScript Ecosystem de <strong>Indeed</strong>, vía AgileEngine.</p>
         <div class="contact-actions">
-          <a class="btn btn--primary" href="./assets/cv-jose-masri.pdf" download>Download CV</a>
-          <a class="btn btn--ghost" href="#sobre-mi">See my work <span class="scroll-cue__arrow">↓</span></a>
+          <a class="btn btn--primary" href="../assets/cv-jose-masri.pdf" download>Descargar CV</a>
+          <a class="btn btn--ghost" href="#sobre-mi">Ver mi trabajo <span class="scroll-cue__arrow">↓</span></a>
         </div>
       </div>
     </section>
 
     <section class="panel panel--left" id="sobre-mi" data-station="1">
       <div class="card">
-        <p class="kicker">Profile</p>
-        <h2 class="heading">Backend engineer with full-stack reach</h2>
-        <p class="body">I design and run backend services, APIs and integrations that hold up in production. I've taken systems from requirements through launch, refactors and incident response, and I've led small teams.</p>
-        <p class="body">My main ground is <strong>Node.js/TypeScript</strong> and <strong>PHP/Laravel</strong>, with Java and Python when the problem calls for them.</p>
+        <p class="kicker">Perfil</p>
+        <h2 class="heading">Backend con alcance full-stack</h2>
+        <p class="body">Diseño y opero servicios backend, APIs e integraciones que aguantan producción. He llevado sistemas desde el requerimiento hasta el lanzamiento, el refactor y la atención de incidentes, y he dirigido equipos pequeños.</p>
+        <p class="body">Mi terreno principal es <strong>Node.js/TypeScript</strong> y <strong>PHP/Laravel</strong>, con Java y Python cuando el problema lo pide.</p>
         <ul class="facts">
-          <li><strong>7+</strong> years in production</li>
-          <li><strong>5</strong> roles since 2016</li>
+          <li><strong>7+</strong> años en producción</li>
+          <li><strong>5</strong> roles desde 2016</li>
         </ul>
-        <a class="btn btn--ghost" href="#experiencia">See experience</a>
+        <a class="btn btn--ghost" href="#experiencia">Ver experiencia</a>
       </div>
     </section>
 
     <section class="panel panel--center" id="experiencia" data-station="2">
       <div class="card card--wide">
-        <p class="kicker">Track record</p>
-        <h2 class="heading">Experience</h2>
+        <p class="kicker">Trayectoria</p>
+        <h2 class="heading">Experiencia</h2>
         <ol class="timeline">
           <li class="timeline__item">
-            <p class="timeline__period">2022 — Present</p>
+            <p class="timeline__period">2022 — Presente</p>
             <h3 class="timeline__role">Senior Backend Engineer <span class="timeline__co">AgileEngine</span></h3>
-            <p class="timeline__note"><strong>Indeed's JavaScript Ecosystem team</strong>: core Node.js libraries, Docker images and templates consumed by other internal teams. Production Node migrations, CI/CD automation and Shopify ↔ Shopmonkey integrations for Moran Family of Brands.</p>
+            <p class="timeline__note">Equipo de <strong>JavaScript Ecosystem de Indeed</strong>: librerías core de Node.js, imágenes Docker y plantillas que consumen los demás equipos internos. Migraciones de Node en producción, automatización de CI/CD e integraciones Shopify ↔ Shopmonkey para Moran Family of Brands.</p>
           </li>
           <li class="timeline__item">
             <p class="timeline__period">2021 — 2022</p>
             <h3 class="timeline__role">Full Stack Engineering Manager <span class="timeline__co">Jellyfish</span></h3>
-            <p class="timeline__note">Backend architecture and team leadership across three <strong>fintech</strong> products: bank onboarding (NestJS, MongoDB, Kubernetes), contactless transactions and payment methods. Also Prosa Analytics: Looker dashboards with row-level filtering by role for one of Mexico's largest payment processors.</p>
+            <p class="timeline__note">Arquitectura backend y liderazgo de equipo en tres productos <strong>fintech</strong>: onboarding bancario (NestJS, MongoDB, Kubernetes), transacciones contactless y métodos de pago. También Prosa Analytics: dashboards de Looker con filtrado row-level por rol para uno de los procesadores de pagos más grandes de México.</p>
           </li>
           <li class="timeline__item">
             <p class="timeline__period">2020 — 2021</p>
             <h3 class="timeline__role">Backend / Integrations Engineer <span class="timeline__co">Máscara de Látex</span></h3>
-            <p class="timeline__note">Integrations between the storefront and ERP and marketplace systems: <strong>Netsuite, Shopify GraphQL and Amazon API</strong>. Migrated the service to Docker and improved its stability.</p>
+            <p class="timeline__note">Integraciones entre el storefront y sistemas ERP y de marketplace: <strong>Netsuite, Shopify GraphQL y Amazon API</strong>. Migré el servicio a Docker y mejoré su estabilidad.</p>
           </li>
           <li class="timeline__item">
             <p class="timeline__period">2018 — 2019</p>
             <h3 class="timeline__role">Full Stack Engineer <span class="timeline__co">Printogo</span></h3>
-            <p class="timeline__note">Architected an end-to-end printing and delivery platform: real-time API (Socket.io), web and mobile, deployed on Docker and Kubernetes.</p>
+            <p class="timeline__note">Arquitectura de una plataforma de impresión y entrega end-to-end: API con tiempo real (Socket.io), web y móvil, desplegada en Docker y Kubernetes.</p>
           </li>
           <li class="timeline__item">
             <p class="timeline__period">2016 — 2020</p>
             <h3 class="timeline__role">Software Engineer <span class="timeline__co">Freelance / Startups</span></h3>
-            <p class="timeline__note">Led development and small teams on JMatch (community dating app) and Yad LaKala Raffles (e-commerce with MercadoPago payments).</p>
+            <p class="timeline__note">Lideré desarrollo y equipos pequeños en JMatch (app de citas comunitaria) y Yad LaKala Raffles (e-commerce con pagos MercadoPago).</p>
           </li>
         </ol>
-        <a class="btn btn--primary" href="./assets/cv-jose-masri.pdf" download>Download full CV</a>
+        <a class="btn btn--primary" href="../assets/cv-jose-masri.pdf" download>Descargar CV completo</a>
       </div>
     </section>
 
     <section class="panel panel--right" id="skills" data-station="3">
       <div class="card">
         <p class="kicker">Stack</p>
-        <h2 class="heading">Technologies</h2>
+        <h2 class="heading">Tecnologías</h2>
         <div class="chips">
-          <p class="chips__label">Languages</p>
+          <p class="chips__label">Lenguajes</p>
           <ul class="chips__list">
             <li>TypeScript</li><li>JavaScript</li><li>Node.js</li><li>Python</li><li>PHP</li><li>Java</li><li>Swift</li><li>Dart</li>
           </ul>
@@ -172,64 +172,64 @@
           <ul class="chips__list">
             <li>NestJS</li><li>Express</li><li>Laravel</li><li>Spring</li><li>React</li><li>Next.js</li><li>Vue</li><li>React Native</li>
           </ul>
-          <p class="chips__label">Data</p>
+          <p class="chips__label">Datos</p>
           <ul class="chips__list">
             <li>PostgreSQL</li><li>MySQL</li><li>MongoDB</li><li>Redis</li><li>MariaDB</li><li>Firebase</li>
           </ul>
-          <p class="chips__label">Cloud and DevOps</p>
+          <p class="chips__label">Cloud y DevOps</p>
           <ul class="chips__list">
             <li>AWS</li><li>GCP</li><li>Docker</li><li>Kubernetes</li><li>GitLab CI</li><li>GitHub Actions</li>
           </ul>
         </div>
-        <a class="btn btn--ghost" href="#proyectos">See projects</a>
+        <a class="btn btn--ghost" href="#proyectos">Ver proyectos</a>
       </div>
     </section>
 
-    <!-- Projects anchor -->
+    <!-- Ancla de proyectos -->
     <div id="proyectos" class="anchor" aria-hidden="true"></div>
 
     <section class="panel panel--left project" id="erp-ecommerce" data-station="4">
       <div class="card">
-        <p class="kicker">Featured project <span class="org">Blazt</span></p>
+        <p class="kicker">Proyecto destacado <span class="org">Blazt</span></p>
         <h2 class="heading">ERP E-commerce <span class="tech">TypeScript · Node</span></h2>
-        <p class="body">ERP platform for <strong>arbitrage between Amazon US and MercadoLibre MX</strong>: it spots price opportunities, syncs catalog and inventory, and publishes to both marketplaces. TypeScript monorepo with an API, web admin panel and its own storefront on PostgreSQL.</p>
-        <a class="btn btn--primary" href="https://ecommerce.blazt.dev" target="_blank" rel="noopener">View live</a>
+        <p class="body">Plataforma ERP de <strong>arbitraje entre Amazon US y MercadoLibre MX</strong>: detecta oportunidades de precio, sincroniza catálogo e inventario y publica en ambos marketplaces. Monorepo TypeScript con API, panel web y storefront propio sobre PostgreSQL.</p>
+        <a class="btn btn--primary" href="https://ecommerce.blazt.dev" target="_blank" rel="noopener">Ver en vivo</a>
       </div>
     </section>
 
     <section class="panel panel--right project" id="bebank" data-station="5">
       <div class="card">
-        <p class="kicker">Featured project <span class="org">Blazt</span></p>
+        <p class="kicker">Proyecto destacado <span class="org">Blazt</span></p>
         <h2 class="heading">Bebank <span class="tech">Java · Spring · React</span></h2>
-        <p class="body"><strong>Core banking</strong> platform: accounts, transactions, back-office and customer onboarding. Java/Spring backend with a React/TypeScript frontend. I was the repository's primary author.</p>
+        <p class="body">Plataforma de <strong>core bancario</strong>: cuentas, transacciones, back-office y onboarding de clientes. Backend en Java/Spring con frontend React/TypeScript. Fui el autor principal del repositorio.</p>
         <a class="btn btn--primary" href="https://bebank.mx" target="_blank" rel="noopener">bebank.mx</a>
       </div>
     </section>
 
     <section class="panel panel--left project" id="motofinancia" data-station="6">
       <div class="card">
-        <p class="kicker">Featured project <span class="org">Overcloud</span></p>
+        <p class="kicker">Proyecto destacado <span class="org">Overcloud</span></p>
         <h2 class="heading">MotoFinancia <span class="tech">Laravel · React</span></h2>
-        <p class="body">End-to-end <strong>motorcycle financing</strong> system: Laravel API, admin panel, dealer portal and public site. Six repos covering loan origination, collections and the dealer network.</p>
-        <a class="btn btn--primary" href="https://motofinancia.devgeai.com" target="_blank" rel="noopener">View live</a>
+        <p class="body">Sistema de <strong>financiamiento de motocicletas</strong> de punta a punta: API en Laravel, panel administrativo, portal de distribuidores y sitio público. Seis repos que cubren originación de crédito, cobranza y la red de dealers.</p>
+        <a class="btn btn--primary" href="https://motofinancia.devgeai.com" target="_blank" rel="noopener">Ver en vivo</a>
       </div>
     </section>
 
     <section class="panel panel--right project" id="driveaway" data-station="7">
       <div class="card">
-        <p class="kicker">Featured project <span class="org">Overcloud</span></p>
+        <p class="kicker">Proyecto destacado <span class="org">Overcloud</span></p>
         <h2 class="heading">Drive Away <span class="tech">TypeScript · Node · React</span></h2>
-        <p class="body"><strong>Fleet and transfer management</strong> platform I built end to end: Node/TypeScript backend, React frontend and Docker Compose deployment.</p>
+        <p class="body">Plataforma de <strong>gestión de flotilla y traslados</strong> que construí de punta a punta: backend Node/TypeScript, frontend React y despliegue en Docker Compose.</p>
       </div>
     </section>
 
     <section class="panel panel--center" id="mas" data-station="8">
       <div class="card card--wide">
-        <p class="kicker">Archive</p>
-        <h2 class="heading">Other projects</h2>
-        <p class="body">Systems I built or maintained at Blazt and Overcloud, most of them running in production with real users.</p>
+        <p class="kicker">Archivo</p>
+        <h2 class="heading">Otros proyectos</h2>
+        <p class="body">Sistemas que construí o mantuve en Blazt y Overcloud, la mayoría en producción con usuarios reales.</p>
         <ul class="more-grid">
-          <li class="more-card"><a href="https://mrwin.com.mx" target="_blank" rel="noopener"><span class="more-card__name">Ototo Raffles</span><span class="more-card__tech">Laravel · Vue</span></a></li>
+          <li class="more-card"><a href="https://mrwin.com.mx" target="_blank" rel="noopener"><span class="more-card__name">Ototo Rifas</span><span class="more-card__tech">Laravel · Vue</span></a></li>
           <li class="more-card"><a href="https://merkaz.mx" target="_blank" rel="noopener"><span class="more-card__name">Merkaz</span><span class="more-card__tech">Laravel</span></a></li>
           <li class="more-card"><a href="https://erp.blazt.dev" target="_blank" rel="noopener"><span class="more-card__name">Inventive ERP</span><span class="more-card__tech">Java · React</span></a></li>
           <li class="more-card"><a href="https://kinor.s2.devgeai.com" target="_blank" rel="noopener"><span class="more-card__name">Kinor</span><span class="more-card__tech">Laravel · Vue</span></a></li>
@@ -256,21 +256,21 @@
     <section class="panel panel--center" id="side" data-station="9">
       <div class="card card--wide">
         <p class="kicker">Open source</p>
-        <h2 class="heading">Personal projects</h2>
+        <h2 class="heading">Proyectos propios</h2>
         <ul class="side-grid">
           <li class="side-card">
             <h3 class="side-card__name">ClipSync <span class="side-card__tech">Swift</span></h3>
-            <p class="side-card__note">Universal clipboard between <strong>macOS and Android over LAN</strong>: copy on one device, paste on the other. Bidirectional, no cloud.</p>
+            <p class="side-card__note">Portapapeles universal entre <strong>macOS y Android por LAN</strong>: copias en un dispositivo, pegas en el otro. Bidireccional y sin nube.</p>
             <a class="side-card__link" href="https://github.com/josemasri/ClipSync" target="_blank" rel="noopener">GitHub</a>
           </li>
           <li class="side-card">
             <h3 class="side-card__name">cmux <span class="side-card__tech">Swift · Ghostty</span></h3>
-            <p class="side-card__note">macOS terminal with <strong>vertical tabs</strong>, built to orchestrate several AI coding agents in parallel.</p>
+            <p class="side-card__note">Terminal para macOS con <strong>pestañas verticales</strong>, pensada para orquestar varios agentes de IA programando en paralelo.</p>
             <a class="side-card__link" href="https://github.com/josemasri/cmux" target="_blank" rel="noopener">GitHub</a>
           </li>
           <li class="side-card">
             <h3 class="side-card__name">petlyApp <span class="side-card__tech">Flutter</span></h3>
-            <p class="side-card__note"><strong>Pet care</strong> mobile app with an admin panel. One codebase for iOS and Android.</p>
+            <p class="side-card__note">App móvil de <strong>cuidado de mascotas</strong> con panel admin. Una base de código para iOS y Android.</p>
             <a class="side-card__link" href="https://github.com/josemasri/petlyApp" target="_blank" rel="noopener">GitHub</a>
           </li>
         </ul>
@@ -279,15 +279,15 @@
 
     <section class="panel panel--contact" id="contacto" data-station="10">
       <div class="card card--center">
-        <p class="kicker">Contact</p>
-        <h2 class="heading">Let's talk</h2>
-        <p class="body">I'm open to new projects and opportunities.</p>
+        <p class="kicker">Contacto</p>
+        <h2 class="heading">Hablemos</h2>
+        <p class="body">Estoy abierto a nuevos proyectos y oportunidades.</p>
         <div class="contact-actions">
           <a class="btn btn--primary" href="mailto:josemasri222@gmail.com">josemasri222@gmail.com</a>
-          <a class="btn btn--ghost" href="./assets/cv-jose-masri.pdf" download>Download CV</a>
+          <a class="btn btn--ghost" href="../assets/cv-jose-masri.pdf" download>Descargar CV</a>
           <a class="btn btn--ghost" href="https://github.com/josemasri" target="_blank" rel="noopener">GitHub</a>
         </div>
-        <footer class="footer">© <span id="year">2026</span> José Masri · Mexico City</footer>
+        <footer class="footer">© <span id="year">2026</span> José Masri · Ciudad de México</footer>
       </div>
     </section>
 
@@ -295,10 +295,10 @@
 
   <noscript>
     <div class="noscript">
-      <p>This portfolio uses a 3D animation with JavaScript. Even so, all the content is readable above. Contact: <a href="mailto:josemasri222@gmail.com">josemasri222@gmail.com</a> · <a href="https://github.com/josemasri">github.com/josemasri</a> · <a href="./assets/cv-jose-masri.pdf">Download CV</a>.</p>
+      <p>Este portafolio usa animación 3D con JavaScript. Aun así, todo el contenido es legible aquí arriba. Contacto: <a href="mailto:josemasri222@gmail.com">josemasri222@gmail.com</a> · <a href="https://github.com/josemasri">github.com/josemasri</a> · <a href="../assets/cv-jose-masri.pdf">Descargar CV</a>.</p>
     </div>
   </noscript>
 
-  <script type="module" src="./src/main.js"></script>
+  <script type="module" src="../src/main.js"></script>
 </body>
 </html>
