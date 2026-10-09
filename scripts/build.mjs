@@ -30,7 +30,9 @@ function render(lang) {
   for (let y = experience.axisStart; y <= Math.floor(site.now); y++) years.push(y);
   const roles = [...experience.roles].sort((a, b) => a.start - b.start);
   const totalYears = site.now - experience.axisStart;
-  const totalLabel = `${Math.floor(totalYears)}y ${Math.round((totalYears % 1) * 12)}m`;
+  // Meses totales primero, para que el redondeo nunca dé "12m".
+  const totalMonths = Math.round(totalYears * 12);
+  const totalLabel = `${Math.floor(totalMonths / 12)}${lang === 'en' ? 'y' : 'a'} ${totalMonths % 12}m`;
 
   const spans = list(roles, (r) => {
     const end = r.end ?? site.now;
