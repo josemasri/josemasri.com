@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- Plantilla de assets/og-image.png (1200x630). Se renderiza con: node scripts/og.mjs -->
+<html><head><meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Geist:wght@500&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  body{margin:0;width:1200px;height:630px;background:#F3F4F1;color:#12161C;font-family:Geist,sans-serif;display:flex;flex-direction:column;justify-content:space-between;padding:72px 80px;box-sizing:border-box}
+  .top{display:flex;justify-content:space-between;font:500 20px 'Geist Mono',monospace;color:#5B6470}
+  .top b{color:#12161C;font-weight:500}.top span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:#178A4C;margin-right:10px}
+  h1{margin:0;font:700 84px/.96 'Bricolage Grotesque';font-variation-settings:"opsz" 96;letter-spacing:-.032em;max-width:15ch}
+  .trace{display:grid;gap:10px}
+  .row{position:relative;height:12px}.bar{position:absolute;top:0;height:12px;border-radius:3px;background:#3B3FD8}
+  .hatch{background:repeating-linear-gradient(-45deg,#3B3FD8 0 2px,transparent 2px 6px);box-shadow:inset 0 0 0 1.5px #3B3FD8}
+</style></head><body>
+  <div class="top"><b>José Masri · Senior Backend Engineer</b><span>josemasri.com</span></div>
+  <h1>I build the backends other systems depend on.</h1>
+  <div class="trace">
+    <div class="row"><div class="bar hatch" style="left:0;width:37%"></div></div>
+    <div class="row"><div class="bar" style="left:18.5%;width:9.3%"></div></div>
+    <div class="row"><div class="bar" style="left:37%;width:9.3%"></div></div>
+    <div class="row"><div class="bar" style="left:46.3%;width:9.3%"></div></div>
+    <div class="row"><div class="bar" style="left:55.6%;width:44.4%"></div></div>
+  </div>
+</body></html>
